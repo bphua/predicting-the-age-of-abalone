@@ -1,1 +1,1 @@
-T09; DS6
+Please run install.packages("prettydoc") and library(prettydoc) before knitting
