@@ -1,0 +1,45 @@
+---
+title: 'Group Project: T09; DS6'
+author: '450132759'
+date: "October 5, 2018"
+output: 
+  prettydoc::html_pretty:
+    theme: cayman # prettydoc theme
+    highlight: null # syntax highlighting
+---
+<!-- Please run install.packages("prettydoc") and library(prettydoc) before knitting -->
+<style>
+@import url('https://fonts.googleapis.com/css?family=Roboto+Mono');
+@import url('https://fonts.googleapis.com/css?family=Lato');
+body{
+  font-family: 'Lato' !important;
+  font-size: 12pt;
+}
+
+code{
+  font-family: 'Roboto Mono' !important;
+  font-size: 12px;
+}
+
+pre{
+  font-family: 'Roboto Mono' !important;
+  font-size: 12px
+}
+
+td{
+  font-family: Lato !important;
+  font-size: 12pt;
+}
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, fig.align = "center")
+```
+
+## Importing data
+
+```{r import}
+library(tidyverse)
+library(gridExtra)
+data = read.table("https://archive.ics.uci.edu/ml/machine-learning-databases/abalone/abalone.data", sep = ",")
+```
