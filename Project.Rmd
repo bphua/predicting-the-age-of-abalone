@@ -1,6 +1,6 @@
 ---
 title: 'Group Project: T09; DS6'
-author: '450132759'
+author: '450132759, 450237777'
 date: "October 5, 2018"
 output: 
   prettydoc::html_pretty:
