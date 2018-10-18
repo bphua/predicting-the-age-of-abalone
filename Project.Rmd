@@ -1,6 +1,6 @@
 ---
 title: 'Group Project: T09; DS6'
-author: '450132759, 450237777'
+author: '450132759, 450237777, 470315518'
 date: "October 5, 2018"
 output: 
   prettydoc::html_pretty:
@@ -50,27 +50,54 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, fig.align =
 ### Importing Data
 
 ```{r import}
+data = read.table("https://archive.ics.uci.edu/ml/machine-learning-databases/abalone/abalone.data", sep = ",")
+View(data)
 library(tidyverse)
 library(gridExtra)
-data = read.table("https://archive.ics.uci.edu/ml/machine-learning-databases/abalone/abalone.data", sep = ",")
+glimpse(data)
 ```
 
 ### Cleaning 
 ```{r}
+#install.packages("reshape")
 library(reshape)
-new_names <- c("Sex", "Length", "Diameter", "Height", "Whole_weight", "Shucked_weight", "Viscera_weight", "Shell_weight", "Rings")
+new_names <- c("Sex", "Length", "Diameter", "Height", "Whole weight", "Shucked weight", "Viscera weight", "Shell weight", "Rings")
 
 colnames(data) <- new_names
 
-# Lenghts, Diameter, Height in mm
-# Weight in grams
+summary(data)
 
-# check for outliers
+#Length, Diameter, Height in mm
+#Weight in g
+
+#Outliers
 melt(data) %>%
   ggplot(aes(x = variable, y = value)) +
-  geom_boxplot() + facet_wrap(~ variable, scales = "free") 
+  geom_boxplot(outlier.size=2, outlier.colour='blue') + facet_wrap(~ variable, scales = 
+  "free") 
 
-# looks like a signifant outlier in height that we may want to remove. 
+#Remove Height = 0.515mm and 1.13mm as it is greater than Q3 + (1.5*IQR) = 0.24
+new_data <- subset(data, data$Height < 0.5)
+ggplot(new_data, aes(y = Height)) +
+geom_boxplot(outlier.size=3, outlier.colour='blue')
+
+#Remove measurements that equals to 0 as well as weight s.t. `Shucked weight` + `Viscera weight` + `Shell weight` > `Whole weight`
+new_data %>% filter(Length, Diameter, Height, `Whole weight`, `Shucked weight`, `Viscera weight`, `Shell weight` == 0) %>% filter(`Shucked weight` + `Viscera weight` + `Shell weight` > `Whole weight`)
+summary(new_data)
+
+#Multivariate Normality
+#install.packages("energy")
+#install.packages("mvtnorm")
+library(energy)
+library(mvtnorm)
+data_less_sex <- new_data %>% select(-Sex)
+mvnorm.e(data_less_sex)
+
+#install.packages("MVN")
+library(MVN)
+result <- mvn(data = data_less_sex, mvnTest = "dh")
+result$multivariateNormality
+result <- mvn(data = data_less_sex, mvnTest = "dh", univariatePlot = "histogram")
 
 # check weights
 data %>%
