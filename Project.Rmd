@@ -58,7 +58,7 @@ data = read.table("https://archive.ics.uci.edu/ml/machine-learning-databases/aba
 ### Cleaning 
 ```{r}
 library(reshape)
-new_names <- c("Sex", "Length", "Diameter", "Height", "Whole weight", "Shucked weight", "Viscera weight", "Shell weight", "Rings")
+new_names <- c("Sex", "Length", "Diameter", "Height", "Whole_weight", "Shucked_weight", "Viscera_weight", "Shell_weight", "Rings")
 
 colnames(data) <- new_names
 
@@ -72,6 +72,12 @@ melt(data) %>%
 
 # looks like a signifant outlier in height that we may want to remove. 
 
+# check weights
+data %>%
+  mutate(sum_weight = Shell_weight + Viscera_weight + Shucked_weight) %>%
+  summarise(bad = sum(sum_weight > Whole_weight)) 
+
+
 ```
 
 
@@ -79,44 +85,26 @@ melt(data) %>%
 <!-- Describe how you used multiple regression to analyse the data set. Specifically, you should discuss how you carried out the steps in analysis discussed in class, i.e., exploration of data to find an initial reasonable model, checking the model and changes to the model based on your checking of the model. -->
 ```{r}
 # basic testing - to get a feel for things - not necessarily for preso or report
+
+# some stats
+data %>%
+  group_by(Sex) %>%
+  summarize(mean_wgt = mean(Whole_weight), mean_lenght = mean(Length), mean_rings = mean(Rings), min_rings = min(Rings), max_rings = max(Rings))
+
+# correlation pairs:
 library(GGally)
-# ggpairs(data)   # function takes a long time to execute.
+#ggpairs(data)   # function takes a long time to execute.
 
 # how many of each sex, m/f/infant
 data %>%
   group_by(Sex) %>%
   summarize(n = n())
 
-# Males
-data_male <- data %>%
-  filter(Sex == "M") %>%
-  select(-Sex)
 
-# Full model Males
-M_full_male <- lm(Rings ~ ., data = data_male)
-round(summary(M_full_male)$coef, 5)
-t(round(broom::glance(M_full_male), 2))
-# ggpairs(data_male)  # takes long time to execute
-
-# Females:
-data_female <- data %>%
-  filter(Sex == "F") %>%
-  select(-Sex)
-
-# Full model females
-M_full_female <- lm(Rings ~ ., data = data_female)
-round(summary(M_full_female)$coef, 5)
-t(round(broom::glance(M_full_female), 2))
-
-# Infants:
-data_infant <- data %>%
-  filter(Sex == "I") %>%
-  select(-Sex)
-
-# Full model infants
-M_full_infant <- lm(Rings ~ ., data = data_infant)
-round(summary(M_full_infant)$coef, 5)
-t(round(broom::glance(M_full_infant), 2))
+# Full model 
+full_model <- lm(Rings ~ ., data = data)
+summary(full_model)
+t(round(broom::glance(full_model), 2))
 
 
 ```
