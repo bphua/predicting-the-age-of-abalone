@@ -1,6 +1,6 @@
 ---
 title: 'Group Project: T09; DS6'
-author: '450132759, 450237777, 470315518'
+author: '450132759, 450237777, 470315518, 470396894'
 date: "October 5, 2018"
 output: 
   prettydoc::html_pretty:
@@ -134,6 +134,61 @@ summary(full_model)
 t(round(broom::glance(full_model), 2))
 
 
+```
+
+### Initial Analysis:
+
+The first step is to determine an appropriate model for multiple regression of the data. We use the AIC model selection method in the backwards direction to achieve this. We begin with the full model and remove the least informative variable after every iteration. 
+```{r}
+# Initialise the full model under M0:
+M1 = lm(Rings~.,data=data)
+
+# Use backwards selection of AIC to determine which independent variables 
+# would have a linear relationship with the Rings variable.
+step.back.aic = step(M1,direction = "backward",trace=FALSE)
+
+# Output our results.
+drop1(step.back.aic,test = "F")
+step.back.aic$coefficients
+
+# Check if our assumptions for regression are valid.
+library(ggfortify)
+autoplot(step.back.aic,which = 1:2)
+```
+
+The model has determined that all the variables except for length has a relationship with the number of rings as we reject the null hypothesis of being no relationship because the p-value is smaller than the critical value. Interestingly enough, the degrees of freedom for sex is 2, meaning both infants and males have a relationship with the number of rings, but not females. 
+
+### Assumptions and Transformation
+
+However, issues arise when checking for the assumptions of regression. Firstly, observing the residual plot, the shape of the blue line indicates a non-linear relationship and violates the linearity assumption. Furthermore, the normality in the qqplot is questionable especially at the ends. Hence, transformation is required of the data, and we have chosen to take the log of the rings variable. 
+
+```{r}
+# Now we take the inverse of ring values and add it to the original dataset
+data = data %>% mutate(Rings = log(Rings))
+
+# Start with the full model
+M1 = lm(Rings~.,data=data)
+
+# We take a step back model and check if our assumptions are valid:
+step.back.aic = step(M1,direction = "backward",trace=FALSE)
+drop1(step.back.aic,test="F")
+kable(step.back.aic$coefficients)
+autoplot(step.back.aic,which=1:2)
+```
+
+Taking the log of the rings we see from the qqplot that the shape is much more linear and closer to the 45 degree line. So our normal assumption can hold. However, the residual plot again identifies that non-linearity cannot hold. Checking for the homoskedasticity from the residual plot, the spread of the residuals from the horizontal $y=0$ line is fairly even. 
+
+More importantly, looking at the updated model now, we find that all the variables have been included from the original full model unlike before when length was excluded. We validated this further when taking a step forward model using AIC again:
+```{r}
+M0 = lm(Rings~1,data=data)
+step.fwd.aic=step(M0,scope=list(lower=M0,upper=M1),direction="forward",trace = FALSE)
+```
+
+Thus, our final model in predicting the number of rings in an Abalone is:
+$$\hat{log(Rings)} = \beta_{0} + \beta_{SexI} x_{SexI} + \beta_{SexM} x_{SexM} + \beta_{Length} x_{Length} + \beta_{Diameter} x_{Diameter} + \beta_{Height} x_{Height} + \beta_{WholeWeight} x_{WholeWeight} + \beta_{Shucked Weight} x_{Shucked Weight} + \beta_{VisceraWeight} x_{VisceraWeight} + \beta_{Shell__Weight} x_{ShellWeight}$$
+```{r}
+# Create a table for the coefficients
+data.frame(step.back.aic$coefficients) %>% kable(caption = "Values of Beta:") %>% kable_styling(bootstrap_options = c("striped", "hover", "condensed"),position="center",full_width = F)
 ```
 
 ## Results
