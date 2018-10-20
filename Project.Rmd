@@ -61,7 +61,8 @@ glimpse(data)
 ```{r}
 #install.packages("reshape")
 library(reshape)
-new_names <- c("Sex", "Length", "Diameter", "Height", "Whole weight", "Shucked weight", "Viscera weight", "Shell weight", "Rings")
+library(ggplot2)
+new_names <- c("Sex", "Length", "Diameter", "Height", "Whole_weight", "Shucked_weight", "Viscera_weight", "Shell_weight", "Rings")
 
 colnames(data) <- new_names
 
@@ -82,7 +83,7 @@ ggplot(new_data, aes(y = Height)) +
 geom_boxplot(outlier.size=3, outlier.colour='blue')
 
 #Remove measurements that equals to 0 as well as weight s.t. `Shucked weight` + `Viscera weight` + `Shell weight` > `Whole weight`
-new_data %>% filter(Length, Diameter, Height, `Whole weight`, `Shucked weight`, `Viscera weight`, `Shell weight` == 0) %>% filter(`Shucked weight` + `Viscera weight` + `Shell weight` > `Whole weight`)
+new_data %>% filter(Length, Diameter, Height, `Whole_weight`, `Shucked_weight`, `Viscera_weight`, `Shell_weight` == 0) %>% filter(`Shucked_weight` + `Viscera_weight` + `Shell_weight` > `Whole_weight`)
 summary(new_data)
 
 #Multivariate Normality
@@ -163,6 +164,7 @@ The model has determined that all the variables except for length has a relation
 However, issues arise when checking for the assumptions of regression. Firstly, observing the residual plot, the shape of the blue line indicates a non-linear relationship and violates the linearity assumption. Furthermore, the normality in the qqplot is questionable especially at the ends. Hence, transformation is required of the data, and we have chosen to take the log of the rings variable. 
 
 ```{r}
+library(knitr)
 # Now we take the inverse of ring values and add it to the original dataset
 data = data %>% mutate(Rings = log(Rings))
 
@@ -187,6 +189,7 @@ step.fwd.aic=step(M0,scope=list(lower=M0,upper=M1),direction="forward",trace = F
 Thus, our final model in predicting the number of rings in an Abalone is:
 $$\hat{log(Rings)} = \beta_{0} + \beta_{SexI} x_{SexI} + \beta_{SexM} x_{SexM} + \beta_{Length} x_{Length} + \beta_{Diameter} x_{Diameter} + \beta_{Height} x_{Height} + \beta_{WholeWeight} x_{WholeWeight} + \beta_{Shucked Weight} x_{Shucked Weight} + \beta_{VisceraWeight} x_{VisceraWeight} + \beta_{Shell__Weight} x_{ShellWeight}$$
 ```{r}
+library(kableExtra)
 # Create a table for the coefficients
 data.frame(step.back.aic$coefficients) %>% kable(caption = "Values of Beta:") %>% kable_styling(bootstrap_options = c("striped", "hover", "condensed"),position="center",full_width = F)
 ```
