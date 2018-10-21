@@ -187,12 +187,91 @@ step.fwd.aic=step(M0,scope=list(lower=M0,upper=M1),direction="forward",trace = F
 ```
 
 Thus, our final model in predicting the number of rings in an Abalone is:
-$$\hat{log(Rings)} = \beta_{0} + \beta_{SexI} x_{SexI} + \beta_{SexM} x_{SexM} + \beta_{Length} x_{Length} + \beta_{Diameter} x_{Diameter} + \beta_{Height} x_{Height} + \beta_{WholeWeight} x_{WholeWeight} + \beta_{Shucked Weight} x_{Shucked Weight} + \beta_{VisceraWeight} x_{VisceraWeight} + \beta_{Shell__Weight} x_{ShellWeight}$$
+
+$\hat{log(Rings)} = \beta_{0} + \beta_{SexI} x_{SexI} + \beta_{SexM} x_{SexM} + \beta_{Length} x_{Length} + \beta_{Diameter} x_{Diameter} + \beta_{Height} x_{Height} + \beta_{WholeWeight} x_{WholeWeight} + \beta_{Shucked Weight} x_{Shucked Weight} + \beta_{VisceraWeight} x_{VisceraWeight} + \beta_{Shell__Weight} x_{ShellWeight}$
+
 ```{r}
 library(kableExtra)
 # Create a table for the coefficients
 data.frame(step.back.aic$coefficients) %>% kable(caption = "Values of Beta:") %>% kable_styling(bootstrap_options = c("striped", "hover", "condensed"),position="center",full_width = F)
 ```
+
+## K-folds Cross Validation
+
+```{r}
+library(caret)
+cv_full = train(
+  Rings ~ Sex + Length + Diameter + Height + Whole_weight + Shucked_weight + 
+    Viscera_weight + Shell_weight,
+  data, 
+  method = "lm", 
+  trControl = trainControl(
+    method = "cv", number = 10, verboseIter = FALSE
+    )
+)
+cv_full
+
+cv_simple = train(
+  Rings ~ Sex + Diameter + Height + Whole_weight + Shucked_weight + 
+    Viscera_weight + Shell_weight, 
+  data, 
+  method = "lm", 
+  trControl = trainControl(
+    method = "cv", number = 10, verboseIter = FALSE
+    )
+)
+cv_simple
+
+ggpairs(data, aes(colour = Sex, alpha = 0.8), title="Pairs plot for abalone dataset") + theme_grey(base_size = 8)
+
+
+```
+
+
+## Infant Model
+```{r}
+data.infant = data
+data.infant = data.infant %>% mutate(Sex = case_when(Sex == "F" ~ "NI", Sex == "M" ~ "NI", Sex == "I" ~ "I"))
+
+cv_full = train(
+  Rings ~ Sex + Length + Diameter + Height + Whole_weight + Shucked_weight + 
+    Viscera_weight + Shell_weight,
+  data.infant, 
+  method = "lm", 
+  trControl = trainControl(
+    method = "cv", number = 10, verboseIter = FALSE
+    )
+)
+cv_full
+
+cv_simple = train(
+  Rings ~ Sex + Diameter + Height + Whole_weight + Shucked_weight + 
+    Viscera_weight + Shell_weight, 
+  data.infant, 
+  method = "lm", 
+  trControl = trainControl(
+    method = "cv", number = 10, verboseIter = FALSE
+    )
+)
+cv_simple
+```
+In the infant model, we combined male and female abalone into the category NI(non-infant), while keeping infants as I.
+
+We observe a slightly higher p-value.
+
+The full model and the simple model both give around the same RMSE and MAE, which indicates that simplifying our model did not negatively impact the accuracy of our prediction.
+
+## Exhaustive Search
+```{r}
+library(leaps)
+regsubset.out = regsubsets(Rings ~ . , data = data, method = "exhaustive")
+regsubset.summary = summary(regsubset.out)
+plot(regsubset.summary$rsq, xlab = "Number of Variables", ylab = "R Square", type = "b")
+plot(regsubset.summary$cp, xlab = "Number of Variables", ylab = "Mallow's Cp", type = "b")
+plot(regsubset.out, scale = "Cp")
+```
+Maybe combining sex into infant/noninfant would be better model? And can also look at removing Length from the model.
+
 
 ## Results
 <!-- Provide inferences about the questions of interest. -->
