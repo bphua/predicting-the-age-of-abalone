@@ -272,7 +272,12 @@ plot(regsubset.out, scale = "Cp")
 ```
 Maybe combining sex into infant/noninfant would be better model? And can also look at removing Length from the model.
 
-
+## Taking a more appropriate model
+```{r}
+M1 = lm(Rings~Whole_weight+Diameter+Height,data=data)
+summary(M1)
+autoplot(M1,which=1:2)
+```
 ## Results
 <!-- Provide inferences about the questions of interest. -->
 
