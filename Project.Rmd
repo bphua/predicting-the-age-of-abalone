@@ -78,12 +78,12 @@ melt(data) %>%
   "free") 
 
 #Remove Height = 0.515mm and 1.13mm as it is greater than Q3 + (1.5*IQR) = 0.24
-new_data <- subset(data, data$Height < 0.5)
+data <- subset(data, data$Height < 0.5)
 ggplot(new_data, aes(y = Height)) +
 geom_boxplot(outlier.size=3, outlier.colour='blue')
 
 #Remove measurements that equals to 0 as well as weight s.t. `Shucked weight` + `Viscera weight` + `Shell weight` > `Whole weight`
-new_data %>% filter(Length, Diameter, Height, `Whole_weight`, `Shucked_weight`, `Viscera_weight`, `Shell_weight` == 0) %>% filter(`Shucked_weight` + `Viscera_weight` + `Shell_weight` > `Whole_weight`)
+data %>% filter(Length, Diameter, Height, `Whole_weight`, `Shucked_weight`, `Viscera_weight`, `Shell_weight` == 0) %>% filter(`Shucked_weight` + `Viscera_weight` + `Shell_weight` > `Whole_weight`)
 summary(new_data)
 
 #Multivariate Normality
