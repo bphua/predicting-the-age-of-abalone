@@ -4,3 +4,11 @@
 .Ruserdata
 *.Rproj
 *.html
+
+*.gz
+
+*.out
+
+*.log
+
+*.aux
