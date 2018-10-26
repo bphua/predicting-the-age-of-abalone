@@ -38,6 +38,7 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, fig.align =
 
 ## Abstract
 <!-- A one paragraph summary of what you set out to learn, and what you ended up finding. It should summarise the entire report. -->
+The Blacklip Abalone, scientific name Haliotis rubra, is common to several parts of Australia (ref: https://dpipwe.tas.gov.au/sea-fishing-aquaculture/community-resources/fish-facts/abalone-blacklip). They are fished recreationally and also farmed. A data set provided by University of California Irvine, originally from the Department of Primary Industry and Fisheries, Tasmania, consists of several physical characteristics, including the number of rings of the Blacklip Abalone shell. The number of rings is a proxy for the age of the Abalone. We set out to determine and compare both the best and most practical model of age of the abalone using multiple regression. This could then be used to develop and enforce recreational fishing regulations and also to maintain helathy farmed populations. Beginning with a full model, we employ step backward model selection using the Akaike information criterion (AIC). This is compared with a step forward AIC and also a practical model using easy to measure explantory variables. Our analysis finds that a practical model performs well compared to the stepwise model and can form the basis for developing best harvesting practices both recreationally and for the Blacklip Abalone Farming industry. 
 
 
 ## Introduction
@@ -46,6 +47,25 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, fig.align =
 
 ## Data Set
 <!-- Describe details about how the data set was collected (if known) and the variables in the data set. -->
+The data is provided by the Machine Leanring Repository at University of California Irvince. It was orginally obtained from the Department of Primary Industry and Fisheries, Tasmania. The variables are:
+\begin{table}[]
+\begin{tabular}{llll}
+Variable        & Type       & Dimension & Description                 \\
+Sex             & nominal    &           & M, F and I (infant)         \\
+Length          & continuous & mm        & Longest shell measurement   \\
+Diameter        & continuous & mm        & perpendicular to length     \\
+Height          & continuous & mm        & with meat in shell          \\
+Whole\_weight   & continuous & g         & whole abalone               \\
+Shucked\_weight & continuous & g         & weight of meat              \\
+Viscera\_weight & continuous & g         & gut weight (after bleeding) \\
+Shell\_weight   & continous  & g         & after being dried           \\
+Rings           & integer    &           & + 1.5 gives age in years   
+\end{tabular}
+\end{table}
+
+We treat Rings as the dependent variable, and all others as independent.
+The data contains no missing values. 2 outliers were noticed for Height and removed. We also removed any instanced where the sum of the constituent weights was larger than the Whole_weight. 
+
 
 ### Importing Data
 
