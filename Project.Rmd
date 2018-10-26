@@ -64,7 +64,7 @@ Rings           & integer    &           & + 1.5 gives age in years
 \end{table}
 
 We treat Rings as the dependent variable, and all others as independent.
-The data contains no missing values. 2 outliers were noticed for Height and removed. We also removed any instanced where the sum of the constituent weights was larger than the Whole_weight. 
+The data contains no missing values. 2 outliers were noticed for Height and removed. We also removed any instances where the sum of the constituent weights was larger than the Whole_weight. 
 
 
 ### Importing Data
