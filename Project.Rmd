@@ -47,7 +47,7 @@ The Blacklip Abalone, scientific name Haliotis rubra, is common to several parts
 
 ## Data Set
 <!-- Describe details about how the data set was collected (if known) and the variables in the data set. -->
-The data is provided by the Machine Leanring Repository at University of California Irvince. It was orginally obtained from the Department of Primary Industry and Fisheries, Tasmania. The variables are:
+The data is provided by the Machine Leanring Repository at University of California Irvine. It was orginally obtained from the Department of Primary Industry and Fisheries, Tasmania. The variables are:
 \begin{table}[]
 \begin{tabular}{llll}
 Variable        & Type       & Dimension & Description                 \\
