@@ -158,65 +158,44 @@ t(round(broom::glance(full_model), 2))
 
 ```
 
-### Initial Analysis:
+## Actual Analysis:
+The first step is to determine an appropriate model for multiple regression of the data. We use the AIC model selection method in the backwards direction to achieve this. We begin with the full model and remove the least informative variable after every iteration. Crucially, we undergo a log transformation of the dependent variable Rings to ensure normality and homoscedasticity assumptions are held for regression. 
 
-The first step is to determine an appropriate model for multiple regression of the data. We use the AIC model selection method in the backwards direction to achieve this. We begin with the full model and remove the least informative variable after every iteration. 
 ```{r}
+# Transform the dependent variable 
+data = data %>% mutate(Rings = log(Rings))
+
 # Initialise the full model under M0:
 M1 = lm(Rings~.,data=data)
 
 # Use backwards selection of AIC to determine which independent variables 
-# would have a linear relationship with the Rings variable.
+# would have a linear relationship with the log(Rings) variable.
 step.back.aic = step(M1,direction = "backward",trace=FALSE)
+summary(step.back.aic)
+summary(step.back.aic)$r.squared
 
 # Output our results.
 drop1(step.back.aic,test = "F")
-step.back.aic$coefficients
+library(kableExtra)
+data.frame(step.back.aic$coefficients) %>% kable(caption = "Coefficients of Model:") %>% kable_styling(bootstrap_options = c("striped", "hover", "condensed"),position="center",full_width = F)
 
 # Check if our assumptions for regression are valid.
 library(ggfortify)
 autoplot(step.back.aic,which = 1:2)
 ```
 
-The model has determined that all the variables except for length has a relationship with the number of rings as we reject the null hypothesis of being no relationship because the p-value is smaller than the critical value. Interestingly enough, the degrees of freedom for sex is 2, meaning both infants and males have a relationship with the number of rings, but not females. 
+The model determined that the following independent variables Sex, Diameter, Height, Shucked_weight and Viscera_weight all have a relationship with the log(Rings). Their respective p-values are smaller than the critical value and thus we reject the null hypothesis of no relationship with the log(Rings) variable. Interestingly enough, the degrees of freedom for sex is 2, meaning both infants and males have an effect on the number of rings, but not females. Looking at the qqnorm plot, most of the points are close to the 45 degree line. Hence the normality assumption holds. Furthermore, the residual points are symmetrically distributed above and below the zero line and their spread is fairly constant. Hence the linearity and homoscedasticity assumptions hold as well. Our r-square value is 0.57 which is good as 57% of the log(Rings) variables can be explained by our constructed model.
 
-### Assumptions and Transformation
-
-However, issues arise when checking for the assumptions of regression. Firstly, observing the residual plot, the shape of the blue line indicates a non-linear relationship and violates the linearity assumption. Furthermore, the normality in the qqplot is questionable especially at the ends. Hence, transformation is required of the data, and we have chosen to take the log of the rings variable. 
+However, the variables chosen by the model, including Sex, Shucked_weight and Viscera_weight can only be determined after cracking open the abalone. This defeats the purpose of the model, as we want to predict as accurate as possible the age of the abalone without opening it to ensure sustainable and efficient farming practices. Thus, a more practical model is chosen with two parameters which are easy to measure without damaging the abalone: weight and diameter. 
 
 ```{r}
-library(knitr)
-# Now we take the inverse of ring values and add it to the original dataset
-data = data %>% mutate(Rings = log(Rings))
-
-# Start with the full model
-M1 = lm(Rings~.,data=data)
-
-# We take a step back model and check if our assumptions are valid:
-step.back.aic = step(M1,direction = "backward",trace=FALSE)
-drop1(step.back.aic,test="F")
-kable(step.back.aic$coefficients)
-varnorm = autoplot(step.back.aic,which=1:2) + theme_classic()
-ggsave("report/varnorm.png", varnorm, dpi=600)
+M2 = lm(Rings~Whole_weight+Diameter,data=data)
+summary(M2)
+library(ggfortify)
+autoplot(M2,which=1:2)
 ```
 
-Taking the log of the rings we see from the qqplot that the shape is much more linear and closer to the 45 degree line. So our normal assumption can hold. However, the residual plot again identifies that non-linearity cannot hold. Checking for the homoskedasticity from the residual plot, the spread of the residuals from the horizontal $y=0$ line is fairly even. 
-
-More importantly, looking at the updated model now, we find that all the variables have been included from the original full model unlike before when length was excluded. We validated this further when taking a step forward model using AIC again:
-```{r}
-M0 = lm(Rings~1,data=data)
-step.fwd.aic=step(M0,scope=list(lower=M0,upper=M1),direction="forward",trace = FALSE)
-```
-
-Thus, our final model in predicting the number of rings in an Abalone is:
-
-$\hat{log(Rings)} = \beta_{0} + \beta_{SexI} x_{SexI} + \beta_{SexM} x_{SexM} + \beta_{Length} x_{Length} + \beta_{Diameter} x_{Diameter} + \beta_{Height} x_{Height} + \beta_{WholeWeight} x_{WholeWeight} + \beta_{Shucked Weight} x_{Shucked Weight} + \beta_{VisceraWeight} x_{VisceraWeight} + \beta_{Shell__Weight} x_{ShellWeight}$
-
-```{r}
-library(kableExtra)
-# Create a table for the coefficients
-data.frame(step.back.aic$coefficients) %>% kable(caption = "Values of Beta:") %>% kable_styling(bootstrap_options = c("striped", "hover", "condensed"),position="center",full_width = F)
-```
+As we can see, the r2 value is much higher (0.69 vs 0.57). This suggests that the practical model is a much better fit of the data than the model determined by the AIC method. In addition, it seems as if the normality, linearity and homoscedasticity assumptions all hold as well from looking at the residual and the qqplot. 
 
 ## K-folds Cross Validation
 
@@ -300,34 +279,6 @@ M1 = lm(Rings~Whole_weight+Diameter+Height,data=data)
 summary(M1)
 autoplot(M1,which=1:2)
 ```
-
-
-## Final Analysis:
-The first step is to determine an appropriate model for multiple regression of the data. We use the AIC model selection method in the backwards direction to achieve this. We begin with the full model and remove the least informative variable after every iteration. We also undergo a log transformation of the dependent variable rings to ensure normality and homoscedasticity assumptions hold for regression. 
-```{r}
-# Now we take the log of ring values and add it to the original dataset
-data = data %>% mutate(Rings = log(Rings))
-
-# filter for infinite log(Rings) 
-data = data %>% filter(is.finite(Rings))
-
-# Start with the full model
-M1 = lm(Rings~.,data=data)
-
-# We take a step back model and check if our assumptions are valid:
-step.back.aic = step(M1,direction = "backward",trace=FALSE)
-drop1(step.back.aic,test="F")
-kable(step.back.aic$coefficients)
-varnorm = autoplot(step.back.aic,which=1:2) + theme_classic()
-ggsave("report/varnorm.png", varnorm, dpi=600)
-```
-
-<!-- Comment here -->
-
-
-
-
-
 ## Results
 <!-- Provide inferences about the questions of interest. -->
 
