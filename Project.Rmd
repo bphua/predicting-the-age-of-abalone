@@ -301,6 +301,31 @@ M1 = lm(Rings~Whole_weight+Diameter+Height,data=data)
 summary(M1)
 autoplot(M1,which=1:2)
 ```
+
+
+## Final Analysis:
+The first step is to determine an appropriate model for multiple regression of the data. We use the AIC model selection method in the backwards direction to achieve this. We begin with the full model and remove the least informative variable after every iteration. We also undergo a log transformation of the dependent variable rings to ensure normality and homoscedasticity assumptions hold for regression. 
+```{r}
+# Now we take the log of ring values and add it to the original dataset
+data = data %>% mutate(Rings = log(Rings))
+
+# Start with the full model
+M1 = lm(Rings~.,data=data)
+
+# We take a step back model and check if our assumptions are valid:
+step.back.aic = step(M1,direction = "backward",trace=FALSE)
+drop1(step.back.aic,test="F")
+kable(step.back.aic$coefficients)
+varnorm = autoplot(step.back.aic,which=1:2) + theme_classic()
+ggsave("report/varnorm.png", varnorm, dpi=600)
+```
+
+<!-- Comment here -->
+
+
+
+
+
 ## Results
 <!-- Provide inferences about the questions of interest. -->
 
