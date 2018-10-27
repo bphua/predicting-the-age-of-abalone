@@ -40,7 +40,6 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, fig.align =
 <!-- A one paragraph summary of what you set out to learn, and what you ended up finding. It should summarise the entire report. -->
 The Blacklip Abalone, scientific name Haliotis rubra, is common to several parts of Australia (ref: https://dpipwe.tas.gov.au/sea-fishing-aquaculture/community-resources/fish-facts/abalone-blacklip). They are fished recreationally and also farmed. A data set provided by University of California Irvine, originally from the Department of Primary Industry and Fisheries, Tasmania, consists of several physical characteristics, including the number of rings of the Blacklip Abalone shell. The number of rings acts as proxy for the age of the Abalone. We set out to determine and compare both the best and most practical model of age of the abalone using multiple regression. This could then be used to develop and enforce recreational fishing regulations and also to maintain helathy farmed populations. Beginning with a full model, we employ step backward model selection using the Akaike information criterion (AIC). This is compared with a step forward AIC and also a practical model using easy to measure explantory variables. The practical model first removes highly correlated variables using a test for multicollinearity. We then remove difficult to measure explantory variables and test the performance of the resultant model. Our analysis finds that a practical model performs well compared to the stepwise model and can form the basis for developing best harvesting practices both recreationally and for the Blacklip Abalone Farming industry. 
 
-
 ## Introduction
 <!-- A discussion of what questions you are trying to answer. -->
 Abalone meat is used as a food delicacy, its shells are a foundation for certain types of jewellery and it functions ecologically to stablize kelp forrests and algae in its rocky reef habitat. Blacklip Abalone reach sexual maturity after three to six years and spawning occurs between Spring and Autumn (ref: https://www.dpi.nsw.gov.au/__data/assets/pdf_file/0009/375858/BlacklipAbalone.pdf). Given the importance of a healthy Abalone population, both in the wild and when farmed, it is crucial to develop, apply and regulate best harvesting practices to maintain healthy Abalone populations. With this in mind, we question how well an unrestriced model using all explanatory variables predicts the age of the Blacklip Abalone. An attempt is then made to build a practical model that can be deployed by farmers and regulators allike that provides a similar level of predictive power but doesn't necessitate killing the Abalone or require the use of specialized equipment. 
@@ -65,7 +64,6 @@ Rings           & integer    &           & + 1.5 gives age in years
 
 We treat Rings as the dependent variable, and all others as independent.
 The data contains no missing values. Two outliers were noticed for Height and removed. We also removed any instances where the sum of the constituent weights was larger than the Whole_weight. 
-
 
 ### Importing Data
 
@@ -129,6 +127,7 @@ data %>%
 
 ```
 
+After assigning new variable names to each column, we checked the assumption for multicollinearity. Linear regression assumes that there is little or no multicollinearity in the data; however, from the ggpairs output, most of the variables were relatively highly correlated with one another. The variables with few of the highest correlations were between length and diameter, as well as whole weight and the other weight predictors. Moreover, we found out that despite the difference in their means, male and female seemed to have similar distributions. So from such results, we decided to combine male and female into one category along with removing either length, or diameter from the model.
 
 ## Analysis
 <!-- Describe how you used multiple regression to analyse the data set. Specifically, you should discuss how you carried out the steps in analysis discussed in class, i.e., exploration of data to find an initial reasonable model, checking the model and changes to the model based on your checking of the model. -->
@@ -142,6 +141,7 @@ data %>%
 
 # correlation pairs:
 library(GGally)
+ggpairs(data, aes(colour = Sex, alpha = 0.8), title="Pairs plot for abalone dataset") + theme_grey(base_size = 8)
 #ggpairs(data)   # function takes a long time to execute.
 
 # how many of each sex, m/f/infant
