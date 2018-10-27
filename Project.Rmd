@@ -63,7 +63,7 @@ Rings           & integer    &           & + 1.5 gives age in years
 \end{table}
 
 We treat Rings as the dependent variable, and all others as independent.
-The data contains no missing values. Two outliers were noticed for Height and removed. We also removed any instances where the sum of the constituent weights was larger than the Whole_weight. 
+The data contains no missing values. Two outliers were noticed for Height and removed. 
 
 ### Importing Data
 
@@ -101,8 +101,7 @@ ggplot(data, aes(y = Height)) +
 geom_boxplot(outlier.size=3, outlier.colour='blue')
 
 #Remove measurements that equals to 0 as well as weight s.t. `Shucked weight` + `Viscera weight` + `Shell weight` > `Whole weight`
-data <- data %>% filter(Length, Diameter, Height, `Whole_weight`, `Shucked_weight`, `Viscera_weight`, `Shell_weight` != 0) %>% filter(`Shucked_weight` + `Viscera_weight` + `Shell_weight` > `Whole_weight`)
-summary(data)
+data <- data %>% filter(Length, Diameter, Height, `Whole_weight`, `Shucked_weight`, `Viscera_weight`, `Shell_weight` != 0) 
 
 #Multivariate Normality
 #install.packages("energy")
@@ -308,6 +307,9 @@ The first step is to determine an appropriate model for multiple regression of t
 ```{r}
 # Now we take the log of ring values and add it to the original dataset
 data = data %>% mutate(Rings = log(Rings))
+
+# filter for infinite log(Rings) 
+data = data %>% filter(is.finite(Rings))
 
 # Start with the full model
 M1 = lm(Rings~.,data=data)
