@@ -12,3 +12,7 @@
 *.log
 
 *.aux
+
+ggtest\.png
+
+report/ggpairs\.png

@@ -140,6 +140,7 @@ data %>%
 
 # correlation pairs:
 library(GGally)
+ggpairs(data, aes(colour = Sex, alpha = 0.8), title="Pairs plot for abalone dataset") + theme_grey(base_size = 8)
 #ggpairs(data)   # function takes a long time to execute.
 
 # how many of each sex, m/f/infant
