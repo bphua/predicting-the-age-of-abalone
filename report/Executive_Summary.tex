@@ -68,6 +68,7 @@
 		
 		
 	\section{Analysis}
+	The first step is to determine an appropriate model for multiple regression of the data. We use the AIC model selection method in the backwards direction to achieve this. We begin with the full model and remove the least informative variable after every iteration. Crucially, we undergo a log transformation of the dependent variable Rings to ensure normality and homoscedasticity assumptions are held for regression. 
 	
 	\begin{figure}[!htbp]
 		\centering
@@ -75,6 +76,12 @@
 		\caption{Variance and Normality of Log-Rings}
 		\label{fig:varnorm}
 	\end{figure}
+	
+	The model determined that the following independent variables Sex, Diameter, Height, Shucked\_weight and Viscera\_weight all have a relationship with the log(Rings). Their respective p-values are smaller than the critical value and thus we reject the null hypothesis of no relationship with the log(Rings) variable. Interestingly enough, the degrees of freedom for sex is 2, meaning both infants and males have an effect on the number of rings, but not females. Looking at the qqnorm plot, most of the points are close to the 45 degree line. Hence the normality assumption holds. Furthermore, the residual points are symmetrically distributed above and below the zero line and their spread is fairly constant. Hence the linearity and homoscedasticity assumptions hold as well. Our r-square value is 0.57 which is good as 57\% of the log(Rings) variables can be explained by our constructed model.
+	
+	However, the variables chosen by the model, including Sex, Shucked\_weight and Viscera\_weight can only be determined after cracking open the abalone. This defeats the purpose of the model, as we want to predict as accurate as possible the age of the abalone without opening it to ensure sustainable and efficient farming practices. Thus, a more practical model is chosen with two parameters which are easy to measure without damaging the abalone: weight and diameter. 
+	
+	As we can see, the r2 value is much higher (0.69 vs 0.57). This suggests that the practical model is a much better fit of the data than the model determined by the AIC method. In addition, it seems as if the normality, linearity and homoscedasticity assumptions all hold as well from looking at the residual and the qqplot. 
 	
 	
 	\section{Results}
