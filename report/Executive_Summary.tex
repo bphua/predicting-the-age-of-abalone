@@ -31,15 +31,33 @@
 
 	\section{Introduction}
 		Abalone meat is used as a food delicacy, its shells are a foundation for certain types of jewellery and it functions ecologically to stablize kelp forrests and algae in its rocky reef habitat. Blacklip Abalone reach sexual maturity after three to six years and spawning occurs between Spring and Autumn\cite{blacklip}. Given the importance of a healthy Abalone population, both in the wild and when farmed, it is crucial to develop, apply and regulate best harvesting practices to maintain healthy Abalone populations. With this in mind, we question how well an unrestriced model using all explanatory variables predicts the age of the Blacklip Abalone. An attempt is then made to build a practical model that can be deployed by farmers and regulators allike that provides a similar level of predictive power but doesn't necessitate killing the Abalone or require the use of specialized equipment.
-				
+	\vspace{-10mm}					
 	\section{Data Set}
 	
-		The data is provided by the Machine Leanring Repository at University of California Irvine. It was orginally obtained from the Department of Primary Industry and Fisheries, Tasmania. The variables are: 
+		The data is provided by the Machine Leanring Repository at University of California Irvine. It was orginally obtained from the Department of Primary Industry and Fisheries, Tasmania. The variables are:
+		\vspace{-8mm}
+		\begin{table}[!htbp]
+			\resizebox{\columnwidth}{!}{%
+				\begin{tabular}{@{}llll@{}}
+					\toprule
+					Variable        & Type       & Dimension & Description                 \\ \midrule
+					Sex             & nominal    &           & M, F and I (infant)         \\
+					Length          & continuous & mm        & Longest shell measurement   \\
+					Diameter        & continuous & mm        & perpendicular to length     \\
+					Height          & continuous & mm        & with meat in shell          \\
+					Whole\_weight   & continuous & g         & whole abalone               \\
+					Shucked\_weight & continuous & g         & weight of meat              \\
+					Viscera\_weight & continuous & g         & gut weight (after bleeding) \\
+					Shell\_weight   & continuous & g         & after being dried           \\
+					Rings           & integer    &           & + 1.5 gives age in years    \\ \bottomrule
+				\end{tabular}%
+			}
+			\caption{Description of Data Set}
+		\end{table}	
 		
-	
-	
-		We treat Rings as the dependent variable, and all others as independent.
-		The data contains no missing values. Two outliers were noticed for Height and removed. We also removed any instances where the sum of the constituent weights was larger than the Whole\_weight. 
+		After assigning new variable names to each column, we checked the assumption for multicollinearity. Linear regression assumes that there is little or no multicollinearity in the data; however, from the ggpairs output, most of the variables were relatively highly correlated with one another. The variables with few of the highest correlations were between length and diameter, as well as whole weight and the other weight predictors. Moreover, we found out that despite the difference in their means, male and female seemed to have similar distributions. So from such results, we decided to combine male and female into one category along with removing either length, or diameter from the model.
+		
+		
 	\section{Analysis}
 	
 	\section{Results}
@@ -47,26 +65,6 @@
 	\section{Discussion \& Conclusion}
 	
 	\section{Appendix}
-	
-	\begin{table}[!htbp]
-		\resizebox{\columnwidth}{!}{%
-			\begin{tabular}{@{}llll@{}}
-				\toprule
-				Variable        & Type       & Dimension & Description                 \\ \midrule
-				Sex             & nominal    &           & M, F and I (infant)         \\
-				Length          & continuous & mm        & Longest shell measurement   \\
-				Diameter        & continuous & mm        & perpendicular to length     \\
-				Height          & continuous & mm        & with meat in shell          \\
-				Whole\_weight   & continuous & g         & whole abalone               \\
-				Shucked\_weight & continuous & g         & weight of meat              \\
-				Viscera\_weight & continuous & g         & gut weight (after bleeding) \\
-				Shell\_weight   & continuous & g         & after being dried           \\
-				Rings           & integer    &           & + 1.5 gives age in years    \\ \bottomrule
-			\end{tabular}%
-		}
-		\caption{Description of Data Set}
-		\label{my-label}
-	\end{table}	
 	
 	\begin{thebibliography}{9}
 		\bibitem{source}
