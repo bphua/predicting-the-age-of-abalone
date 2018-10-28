@@ -2,9 +2,9 @@
 \author{\small 450132759}
 \date{\small October 29, 2018}
 
-\documentclass[9pt,twocolumn]{article}
+\documentclass[10pt,twocolumn]{article}
 %\usepackage{fullpage} % full parge margins
-\usepackage[margin=0.5in]{geometry}
+\usepackage[margin=0.75in]{geometry}
 \usepackage{hyperref} % allows for linking urls
 \usepackage[superscript,biblabel]{cite} % superscript while citing
 \usepackage{booktabs}
@@ -34,10 +34,10 @@
 	\end{abstract}
 
 	\section{Introduction}
-		Abalone meat is used as a food delicacy, its shells are a foundation for certain types of jewellery and it functions ecologically to stablize kelp forrests and algae in its rocky reef habitat. Blacklip Abalone reach sexual maturity after three to six years and spawning occurs between Spring and Autumn\cite{blacklip}. Given the importance of a healthy Abalone population, both in the wild and when farmed, it is crucial to develop, apply and regulate best harvesting practices to maintain healthy Abalone populations. With this in mind, we question how well an unrestriced model using all explanatory variables predicts the age of the Blacklip Abalone. An attempt is then made to build a practical model that can be deployed by farmers and regulators allike that provides a similar level of predictive power but doesn't necessitate killing the Abalone or require the use of specialized equipment.					
+		Abalone meat is used as a food delicacy, its shells are a foundation for certain types of jewellery and it functions ecologically to stablize kelp forrests and algae in its rocky reef habitat. Blacklip Abalone reach sexual maturity after three to six years and spawning occurs between Spring and Autumn\cite{blacklip}. Given the importance of a healthy Abalone population, both in the wild and when farmed, it is crucial to develop, apply and regulate best harvesting practices to maintain healthy Abalone populations. With this in mind, we question how well an unrestricted model using all explanatory variables predicts the age of the Blacklip Abalone. An attempt is then made to build a practical model that can be deployed by farmers and regulators allike that provides a similar level of predictive power but doesn't necessitate killing the Abalone or require the use of specialized equipment.					
 	\section{Data Set}
 	
-		The data is provided by the Machine Leanring Repository at University of California Irvine. It was orginally obtained from the Department of Primary Industry and Fisheries, Tasmania. The variables are:
+		The data is provided by the Machine Leanring Repository at University of California Irvine. It was orginally obtained from the Department of Primary Industry and Fisheries, Tasmania. The data summary is shown in Table 1.
 		\begin{table}[!htbp]
 			\resizebox{\columnwidth}{!}{%
 				\begin{tabular}{@{}llll@{}}
@@ -57,11 +57,11 @@
 			\caption{Description of Data Set}
 		\end{table}	
 		
-		After assigning new variable names to each column, we checked the assumption for multicollinearity. Linear regression assumes that there is little or no multicollinearity in the data; however, from the ggpairs output, most of the variables were relatively highly correlated with one another. The variables with few of the highest correlations were between length and diameter, as well as whole weight and the other weight predictors. Moreover, we found out that despite the difference in their means, male and female seemed to have similar distributions. So from such results, we decided to combine male and female into one category along with removing either length, or diameter from the model.
+		After assigning new variable names to each column, we checked the assumption for multicollinearity. Linear regression assumes that there is little or no multicollinearity in the data; however, from the ggpairs output, most of the variables were relatively highly correlated with one another. The variables with few of the highest correlations were between length, height, and diameter, as well as whole weight and the other weight predictors. Moreover, we found out that despite the difference in their means, male and female seemed to have similar distributions. So from such results, we decided to combine male and female into one category along with removing either length, or diameter from the model.
 		
 		\begin{figure}[!htbp]
 			\centering
-			\includegraphics[width=0.85\columnwidth]{ggpairs}
+			\includegraphics[width=\columnwidth]{ggpairs}
 			\caption{GGPairs showing high colinearity}
 			\label{fig:ggpairs}
 		\end{figure}
@@ -89,7 +89,6 @@
 				Shell\_weight   & 0.49  \\ \bottomrule
 				\end{tabular}}
 			\caption{Stepback AIC coefficients}
-			\vspace{-8mm}
 		\label{my-label}
 	\end{table}	
 	
@@ -101,18 +100,18 @@
 		\caption{Variance and Normality of Log-Rings}
 		\label{fig:varnorm}
 	\end{figure}
-	\vspace{-8mm}
-	
-	However, the variables chosen by the model, including Sex, Shucked\_weight and Viscera\_weight can only be determined after cracking open the abalone. This defeats the purpose of the model, as we want to predict as accurate as possible the age of the abalone without opening it to ensure sustainable and efficient farming practices. Thus, a more practical model is chosen with two parameters which are easy to measure without damaging the abalone: weight and diameter. 
-	
-	As we can see, the r2 value is much higher (0.69 vs 0.57). This suggests that the practical model is a much better fit of the data than the model determined by the AIC method. In addition, it seems as if the normality, linearity and homoscedasticity assumptions all hold as well from looking at the residual and the qqplot. 
-	
+	\vspace{-8mm}	
 	
 	\section{Results}
+		However, the variables chosen by the model, including Sex, Shucked\_weight and Viscera\_weight can only be determined after cracking open the abalone. This defeats the purpose of the model, as we want to predict as accurate as possible the age of the abalone without opening it to ensure sustainable and efficient farming practices. Thus, a more practical model is chosen with two parameters which are easy to measure without damaging the abalone: weight and diameter. 
+		
+		As we can see, the r2 value is much higher (0.69 vs 0.57). This suggests that the practical model is a much better fit of the data than the model determined by the AIC method. In addition, it seems as if the normality, linearity and homoscedasticity assumptions all hold as well from looking at the residual and the qqplot.
+		
+		Performing 10-fold cross validation on both the full model and the practical model (with only whole weight and diameter), we observe a RMSE of 1.60 and 1.70, respectively. This gives further validation to our practical model, as we only observed a reduction of out-of-sample performance by less than 10\%. 
 	
 	\section{Discussion \& Conclusion}
 	
-	\section{Appendix}
+		
 	
 	\begin{thebibliography}{9}
 		\bibitem{source}
