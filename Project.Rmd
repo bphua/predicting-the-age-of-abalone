@@ -103,22 +103,25 @@ geom_boxplot(outlier.size=3, outlier.colour='blue')
 #Remove measurements that equals to 0 as well as weight s.t. `Shucked weight` + `Viscera weight` + `Shell weight` > `Whole weight`
 data <- data %>% filter(Length, Diameter, Height, `Whole_weight`, `Shucked_weight`, `Viscera_weight`, `Shell_weight` != 0) 
 
+#Combine Male and Female
+data <- data %>% mutate(Sex = case_when(Sex == "F" ~ "NI", Sex == "M" ~ "NI", Sex == "I" ~ "I"))
+
 #Multivariate Normality
 #install.packages("energy")
 #install.packages("mvtnorm")
-library(energy)
-library(mvtnorm)
-data_less_sex <- data %>% select(-Sex)
+#library(energy)
+#library(mvtnorm)
+#data_less_sex <- data %>% select(-Sex)
 #mvnorm.e(data_less_sex)
 
 #install.packages("MVN")
-library(MVN)
+#library(MVN)
 ### NO LONGER NEEDED AS NOT REGRESSIN FOR LIN###
 #result <- mvn(data = data_less_sex, mvnTest = "dh")
 #result$multivariateNormality
 #result <- mvn(data = data_less_sex, mvnTest = "dh", univariatePlot = "histogram")
 
-# check weights
+#Check weights
 data %>%
   mutate(sum_weight = Shell_weight + Viscera_weight + Shucked_weight) %>%
   summarise(bad = sum(sum_weight > Whole_weight)) 
