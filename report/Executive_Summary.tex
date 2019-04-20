@@ -27,7 +27,7 @@
 \begin{document}
 	\begin{center}
 		\textbf{\Large Modelling the Age of Abalone} \\\vspace{4mm}
-		\texttt{Project-16 T09-DS6\\450132759 / 450237777\\470315518 / 470396894}
+		\texttt{Phua, Benjamin\\451032759}
 	\end{center}
 	\begin{abstract}
 		The Blacklip Abalone, scientific name Haliotis rubra, is common to several parts of Australia \cite{source}. They are fished recreationally and also farmed. A data set provided by University of California Irvine, originally from the Department of Primary Industry and Fisheries, Tasmania, consists of several physical characteristics, including the number of rings of the Blacklip Abalone shell. The number of rings acts as proxy for the age of the Abalone. We set out to determine and compare both the best and most practical model of age of the abalone using multiple regression. This could then be used to develop and enforce recreational fishing regulations and also to maintain helathy farmed populations. Beginning with a full model, we employ step backward model selection using the Akaike information criterion (AIC). This is compared with a step forward AIC and also a practical model using easy to measure explantory variables. The practical model first removes highly correlated variables using a test for multicollinearity. We then remove difficult to measure explantory variables and test the performance of the resultant model. Our analysis finds that a practical model performs well compared to the stepwise model and can form the basis for developing best harvesting practices both recreationally and for the Blacklip Abalone Farming industry.
@@ -92,7 +92,7 @@
 		\label{my-label}
 	\end{table}	
 	
-	The model determined that the following independent variables Sex, Diameter, Height, Shucked\_weight and Viscera\_weight all have a relationship with the log(Rings). Their respective p-values are smaller than the critical value and thus we reject the null hypothesis of no relationship with the log(Rings) variable. Interestingly enough, the degrees of freedom for sex is 2, meaning infants have a more significant effect on the number of rings than males with respect to females. Looking at the qqnorm plot, most of the points are close to the 45 degree line. Hence the normality assumption holds. Furthermore, the residual points are symmetrically distributed above and below the zero line and their spread is fairly constant. Hence the linearity and homoscedasticity assumptions hold as well. Our r-square value is 0.60 which is good as 60\% of the log(Rings) variables can be explained by our constructed model.
+	The model determined that the following independent variables \texttt{Sex}, \texttt{Diameter}, \texttt{Height}, \texttt{Shucked\_weight} and \texttt{Viscera\_weight} all have a relationship with the \texttt{log(Rings)}. Their respective p-values are smaller than the critical value and thus we reject the null hypothesis of no relationship with the \texttt{log(Rings)} variable. Interestingly enough, the degrees of freedom for sex is 2, meaning infants have a more significant effect on the number of rings than males with respect to females. Looking at the qqnorm plot, most of the points are close to the 45 degree line. Hence the normality assumption holds. Furthermore, the residual points are symmetrically distributed above and below the zero line and their spread is fairly constant. Hence the linearity and homoscedasticity assumptions hold as well. Our r-square value is 0.60 which is good as 60\% of the \texttt{log(Rings)} variables can be explained by our constructed model.
 	
 	
 	\begin{figure}[!htbp]
@@ -104,9 +104,9 @@
 	\vspace{-8mm}	
 	
 	\section{Results}
-		However, the variables chosen by the model, including Sex, Shucked\_weight and Viscera\_weight can only be determined after cracking open the abalone. This defeats the purpose of the model, as we want to predict as accurate as possible the age of the abalone without opening it to ensure sustainable and efficient farming practices. Thus, a more practical model is chosen with two parameters which are easy to measure without damaging the abalone: weight and diameter. 
+		However, the variables chosen by the model, including \texttt{Sex}, \texttt{Shucked\_weight} and \texttt{Viscera\_weight} can only be determined after cracking open the abalone. This defeats the purpose of the model, as we want to predict as accurate as possible the age of the abalone without opening it to ensure sustainable and efficient farming practices. Thus, a more practical model is chosen with two parameters which are easy to measure without damaging the abalone: weight and diameter. 
 		
-		$\hat{log(Rings)} = 1.26 +  -0.10 x_{Diameter} + 2.61 x_{Weight}$ has a lower $r^2$ value 0.45 (lower than 0.57). However, this is still a very good result as only two variables are used compared to 8 determined by the AIC and yet almost half of the log(Rings) variables can be explained by this model. In addition, from plotting the residual and qqplot of the practical model, the normality, linearity and homoscedasticity assumptions all hold as well. 
+		\texttt{{log(Rings)} = 1.26 +  -0.10 x\_{Diameter} + 2.61 x\_{Weight}} has a lower $r^2$ value 0.45 (lower than 0.57). However, this is still a very good result as only two variables are used compared to 8 determined by the AIC and yet almost half of the log(Rings) variables can be explained by this model. In addition, from plotting the residual and qqplot of the practical model, the normality, linearity and homoscedasticity assumptions all hold as well. 
 		
 		Performing 10-fold cross validation on both the full model and the practical model (with only whole weight and diameter), we observe a RMSE of 1.60 and 1.70, respectively. This gives further validation to our practical model, as we only observed a reduction of out-of-sample performance by less than 10\%. 
 	

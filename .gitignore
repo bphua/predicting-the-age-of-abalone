@@ -4,6 +4,7 @@
 .Ruserdata
 *.Rproj
 *.html
+*.ini
 
 *.gz
 
@@ -12,3 +13,5 @@
 *.log
 
 *.aux
+project_rticles/
+*.pptx
