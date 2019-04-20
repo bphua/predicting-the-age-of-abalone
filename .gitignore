@@ -15,3 +15,5 @@
 *.aux
 project_rticles/
 *.pptx
+report/
+data/
